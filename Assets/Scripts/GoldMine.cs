@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class GoldMine : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private int gold;
     void Start()
     {
-        
+        gold = 100;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (gold <= 0)        
+            Destroy(this);
         
     }
 }

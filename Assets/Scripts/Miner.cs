@@ -7,6 +7,7 @@ public enum MinerStates
     IDLE,
     PATROL,
     MINING,
+    RETURNING,
 }
 
 
@@ -17,9 +18,12 @@ public class Miner : MonoBehaviour
     private float speed = 40f;
     private int currentPathIndex;
     private List<Vector3> pathVectorList;
-    float timer;    
+    float timer;
     bool hasObjective;
-    private Vector3 targetMine;
+    private GameObject targetMine;
+    public GameObject homeBase;
+    private float goldCapacity;
+   
 
     MinerStates _myState;
     public MinerStates MyState
@@ -34,13 +38,14 @@ public class Miner : MonoBehaviour
 
     private void Start()
     {
+     
     }
-   
+
 
 
     void Update()
-    {      
-        timer += 1 * Time.deltaTime;        
+    {
+        timer += 1 * Time.deltaTime;
         switch (MyState)
         {
             case MinerStates.IDLE:
@@ -50,13 +55,16 @@ public class Miner : MonoBehaviour
                 Patrol();
                 break;
             case MinerStates.MINING:
-                
+                Mining();
                 break;
-           
+            case MinerStates.RETURNING:
+                Returning();
+                break;
+
             default:
                 break;
         }
-          
+
     }
     void BeIdle()
     {
@@ -66,34 +74,71 @@ public class Miner : MonoBehaviour
 
     void Patrol()
     {
-        if (!hasObjective)       
+        if (!hasObjective)
             GetObjective();
-        HandleMovement();       
+        HandleMovement();
     }
 
-    void Mining()
+    private void OnTriggerEnter2D(Collider2D col)
     {
-        this.SetTargetPosition(targetMine);
+        if (col.gameObject.tag == "Mine")
+        {
+            if (MyState == MinerStates.PATROL)
+            {
+                targetMine = col.gameObject;               
+                StopMoving();
+                hasObjective = false;
+                MyState = MinerStates.MINING;
+            }
+
+        }
     }
 
-    void LookForMine()
-    {
+    private void Mining()
+    {       
 
+        PathFinding.Instance.GetGrid().GetXY(new Vector3(targetMine.transform.position.x, targetMine.transform.position.y, 5), out int x, out int y);
+        this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
+        hasObjective = true;
+        HandleMovement();
+        if (!hasObjective)
+        {           
+          goldCapacity = goldCapacity + 5 * Time.deltaTime;
+            print(goldCapacity);
+        }
+        if (goldCapacity > 10)
+        {
+            MyState = MinerStates.RETURNING;
+        }
+
+
+    }
+    private void Returning()
+    {
+        PathFinding.Instance.GetGrid().GetXY(new Vector3(homeBase.transform.position.x, homeBase.transform.position.y, 5), out int x, out int y);
+        this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
+        hasObjective = true;
+        HandleMovement();
+        if (!hasObjective)
+        {
+            goldCapacity = 0;
+            MyState = MinerStates.MINING;
+        }
     }
 
     private void GetObjective()
     {
-        int _x = Random.Range(0, 20)*10;
-        int _y = Random.Range(0, 10)*10;
-        
+        int _x = Random.Range(0, 20) * 10;
+        int _y = Random.Range(0, 10) * 10;
+
         PathFinding.Instance.GetGrid().GetXY(new Vector3(_x, _y, 5), out int x, out int y);
         this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
         hasObjective = true;
     }
 
-    
 
-   
+
+
 
 
     private void StopMoving()
@@ -111,13 +156,13 @@ public class Miner : MonoBehaviour
         if (pathVectorList != null)
         {
             Vector3 targetPosition = pathVectorList[currentPathIndex];
-            if (Vector3.Distance(transform.position, targetPosition)>1f)
+            if (Vector3.Distance(transform.position, targetPosition) > 1f)
             {
                 Vector3 moveDir = (targetPosition - transform.position).normalized;
-                
-                float distanceBefore = Vector3.Distance(transform.position, targetPosition);                
+
+                float distanceBefore = Vector3.Distance(transform.position, targetPosition);
                 transform.position = transform.position + moveDir * speed * Time.deltaTime;
-                
+
             }
             else
             {
@@ -126,10 +171,19 @@ public class Miner : MonoBehaviour
                 {
                     StopMoving();
                     hasObjective = false;
-                    MyState = MinerStates.IDLE;
+                    if (MyState == MinerStates.PATROL)
+                        MyState = MinerStates.IDLE;
+                    if (MyState == MinerStates.MINING)
+                    {
+                      
+
+
+                    }
+
+
                 }
-                    
-                
+
+
             }
         }
     }
@@ -139,7 +193,7 @@ public class Miner : MonoBehaviour
         currentPathIndex = 0;
         pathVectorList = PathFinding.Instance.FindPath(GetPosition(), targetPosition);
 
-        if (pathVectorList !=null && pathVectorList.Count>1)
+        if (pathVectorList != null && pathVectorList.Count > 1)
         {
             pathVectorList.RemoveAt(0);
         }

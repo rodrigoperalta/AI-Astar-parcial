@@ -15,9 +15,10 @@ public class Explorer : MonoBehaviour
     private float speed = 40f;
     private int currentPathIndex;
     private List<Vector3> pathVectorList;
-    float timer;   
+    float timer;
     bool hasObjective;
     public GameObject mine;
+    private GameObject target;
 
     ExplorerStates _myState;
     public ExplorerStates MyState
@@ -31,10 +32,12 @@ public class Explorer : MonoBehaviour
     }
 
     void Update()
-    {       
+    {
+        print(MyState);
         timer += 1 * Time.deltaTime;
         switch (MyState)
         {
+
             case ExplorerStates.IDLE:
                 BeIdle();
                 break;
@@ -42,9 +45,8 @@ public class Explorer : MonoBehaviour
                 Patrol();
                 break;
             case ExplorerStates.MARKING:
-
+                Mark();
                 break;
-
             default:
                 break;
         }
@@ -72,16 +74,23 @@ public class Explorer : MonoBehaviour
         this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
         hasObjective = true;
     }
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Spot")
+        {
+            target = col.gameObject;
+            MyState = ExplorerStates.MARKING;
+        }
+    }
 
     private void Mark()
     {
-        /*this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
-        PathFinding.Instance.GetGrid().GetXY(new Vector3(_x, _y, 5), out int x, out int y);
-        Instantiate(mine, PathFinding.Instance.GetGrid().GetWorldPosition(x, y), Quaternion.identity);
-        GameManager.Instance.RemoveSpot();*/
+        StopMoving();
+        PathFinding.Instance.GetGrid().GetXY(new Vector3(target.transform.position.x, target.transform.position.y, 5), out int x, out int y);
+        this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
+        HandleMovement();
+       
     }
-
-
 
     private void StopMoving()
     {
@@ -109,7 +118,14 @@ public class Explorer : MonoBehaviour
             {
                 currentPathIndex++;
                 if (currentPathIndex >= pathVectorList.Count)
-                {
+                {  
+                    if (MyState == ExplorerStates.MARKING)
+                    {                      
+                        GameManager.Instance.RemoveSpot();
+                        PathFinding.Instance.GetGrid().GetXY(new Vector3(target.transform.position.x, target.transform.position.y, 5), out int a, out int b);
+                        Instantiate(mine, PathFinding.Instance.GetGrid().GetWorldPosition(a, b), Quaternion.identity);
+                        Destroy(target);                        
+                    }
                     StopMoving();
                     hasObjective = false;
                     MyState = ExplorerStates.IDLE;
