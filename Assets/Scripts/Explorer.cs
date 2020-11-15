@@ -12,7 +12,7 @@ public enum ExplorerStates
 
 public class Explorer : MonoBehaviour
 {
-    private float speed = 40f;
+    private float speed = 20f;
     private int currentPathIndex;
     private List<Vector3> pathVectorList;
     float timer;
@@ -71,8 +71,11 @@ public class Explorer : MonoBehaviour
         int _y = Random.Range(0, 10) * 10;
 
         PathFinding.Instance.GetGrid().GetXY(new Vector3(_x, _y, 5), out int x, out int y);
-        this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
-        hasObjective = true;
+        if (PathFinding.Instance.GetNode(x, y).GetIsWalkable())
+        {
+            this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
+            hasObjective = true;
+        }
     }
     private void OnTriggerEnter2D(Collider2D col)
     {
@@ -86,9 +89,19 @@ public class Explorer : MonoBehaviour
     private void Mark()
     {
         StopMoving();
-        PathFinding.Instance.GetGrid().GetXY(new Vector3(target.transform.position.x, target.transform.position.y, 5), out int x, out int y);
-        this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
-        HandleMovement();
+        if (target != null)
+        {           
+            PathFinding.Instance.GetGrid().GetXY(new Vector3(target.transform.position.x, target.transform.position.y, 5), out int x, out int y);
+            this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
+            HandleMovement();
+            print("target is null");
+        }
+        else
+        {
+            hasObjective = false;
+            MyState = ExplorerStates.IDLE;
+        }
+        
        
     }
 

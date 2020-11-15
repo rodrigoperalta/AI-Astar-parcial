@@ -11,15 +11,18 @@ public class GameManager : MonoBehaviour
     public GameObject miner;
     public GameObject explorer;
     private int spotCount;
-    public int gold;
+    public float gold;
     public int population;
 
     private void Start()
     {
         Instance = this;
         pathfinding = new PathFinding(20, 10);
-        gold = 10000;
+        SetObstacles();
+        gold = 100;
         population = 0;
+        
+       
     }
     private void Update()
     {
@@ -50,6 +53,42 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void SetObstacles()
+    {
+        pathfinding.GetNode(0, 0).SetIsWalkable(false);
+        pathfinding.GetNode(1, 0).SetIsWalkable(false);
+        pathfinding.GetNode(0, 1).SetIsWalkable(false);
+        pathfinding.GetNode(3, 6).SetIsWalkable(false);
+        pathfinding.GetNode(2, 6).SetIsWalkable(false);
+        pathfinding.GetNode(2, 7).SetIsWalkable(false);
+        pathfinding.GetNode(3, 7).SetIsWalkable(false);
+        pathfinding.GetNode(5, 2).SetIsWalkable(false);
+        pathfinding.GetNode(8, 6).SetIsWalkable(false);
+        pathfinding.GetNode(9, 6).SetIsWalkable(false);
+        pathfinding.GetNode(10, 6).SetIsWalkable(false);
+        pathfinding.GetNode(12, 2).SetIsWalkable(false);
+        pathfinding.GetNode(13, 3).SetIsWalkable(false);
+        pathfinding.GetNode(14, 4).SetIsWalkable(false);
+        pathfinding.GetNode(13, 9).SetIsWalkable(false);
+        pathfinding.GetNode(14, 9).SetIsWalkable(false);
+        pathfinding.GetNode(15, 9).SetIsWalkable(false);
+        pathfinding.GetNode(16, 9).SetIsWalkable(false);
+        pathfinding.GetNode(17, 9).SetIsWalkable(false);
+        pathfinding.GetNode(17, 8).SetIsWalkable(false);
+        pathfinding.GetNode(17, 7).SetIsWalkable(false);
+        pathfinding.GetNode(17, 6).SetIsWalkable(false);
+        pathfinding.GetNode(18, 2).SetIsWalkable(false);
+        pathfinding.GetNode(19, 2).SetIsWalkable(false);
+        pathfinding.GetNode(18, 1).SetIsWalkable(false);
+        pathfinding.GetNode(19, 1).SetIsWalkable(false);
+        pathfinding.GetNode(12, 4).SetIsWalkable(false);
+        pathfinding.GetNode(13, 4).SetIsWalkable(false);
+        pathfinding.GetNode(12, 3).SetIsWalkable(false);
+        pathfinding.GetNode(14, 3).SetIsWalkable(false);
+        pathfinding.GetNode(13, 2).SetIsWalkable(false);
+        pathfinding.GetNode(14, 2).SetIsWalkable(false);
+    }
+
     void SpawnMiner()
     {
         pathfinding.GetGrid().GetXY(new Vector3(80, 40, 5), out int x, out int y);
@@ -73,8 +112,12 @@ public class GameManager : MonoBehaviour
             int _x = Random.Range(0, 20) * 10;
             int _y = Random.Range(0, 10) * 10;
             pathfinding.GetGrid().GetXY(new Vector3(_x, _y, 5), out int x, out int y);
-            Instantiate(spot, pathfinding.GetGrid().GetWorldPosition(x, y), Quaternion.identity);
-            spotCount++;
+            if (pathfinding.GetNode(x,y).GetIsWalkable())
+            {
+                Instantiate(spot, pathfinding.GetGrid().GetWorldPosition(x, y), Quaternion.identity);
+                spotCount++;
+            }
+           
         }
     }
 
@@ -83,9 +126,14 @@ public class GameManager : MonoBehaviour
         spotCount--;
     }
 
-    public int GetGold()
+    public void AddGold(float g)
     {
-        return gold;
+        gold += g;
+    }    
+
+    public float GetGold()
+    {
+        return Mathf.RoundToInt(gold);
     }    
     public int GetPopulation()
     {

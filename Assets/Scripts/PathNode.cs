@@ -29,6 +29,11 @@ public class PathNode
         isWalkable = b;
     }
 
+    public bool GetIsWalkable()
+    {
+        return isWalkable;
+    }
+
     public void IsASport(bool s)
     {
         isASpot = s;

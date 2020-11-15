@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GoldMine : MonoBehaviour
 {
-    private int gold;
+  public float gold;
     void Start()
     {
         gold = 100;
@@ -14,7 +14,16 @@ public class GoldMine : MonoBehaviour
     void Update()
     {
         if (gold <= 0)        
-            Destroy(this);
+            Destroy(this.gameObject);
+        //print("this mine has:" + gold);
         
     }
+
+    public void LoseGold(float g)
+    {
+        gold -= g*Time.deltaTime;
+    }
+
+    
+
 }

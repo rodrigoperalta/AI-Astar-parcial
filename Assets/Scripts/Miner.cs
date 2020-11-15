@@ -15,7 +15,7 @@ public enum MinerStates
 
 public class Miner : MonoBehaviour
 {
-    private float speed = 40f;
+    private float speed = 20f;
     private int currentPathIndex;
     private List<Vector3> pathVectorList;
     float timer;
@@ -95,23 +95,29 @@ public class Miner : MonoBehaviour
     }
 
     private void Mining()
-    {       
-
-        PathFinding.Instance.GetGrid().GetXY(new Vector3(targetMine.transform.position.x, targetMine.transform.position.y, 5), out int x, out int y);
-        this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
-        hasObjective = true;
-        HandleMovement();
-        if (!hasObjective)
-        {           
-          goldCapacity = goldCapacity + 5 * Time.deltaTime;
-            print(goldCapacity);
+    {
+        if (targetMine!=null)
+        {
+            PathFinding.Instance.GetGrid().GetXY(new Vector3(targetMine.transform.position.x, targetMine.transform.position.y, 5), out int x, out int y);
+            this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
+            hasObjective = true;
+            HandleMovement();
         }
-        if (goldCapacity > 10)
+        else
         {
             MyState = MinerStates.RETURNING;
         }
-
-
+       
+        if (!hasObjective && targetMine!=null)
+        {           
+          goldCapacity = goldCapacity + 5 * Time.deltaTime;
+          targetMine.GetComponent<GoldMine>().LoseGold(goldCapacity);         
+        }
+        if (goldCapacity >= 10)
+        {            
+            MyState = MinerStates.RETURNING;
+        }
+        //print(goldCapacity);
     }
     private void Returning()
     {
@@ -121,8 +127,12 @@ public class Miner : MonoBehaviour
         HandleMovement();
         if (!hasObjective)
         {
+            GameManager.Instance.AddGold(goldCapacity);
             goldCapacity = 0;
-            MyState = MinerStates.MINING;
+            if (targetMine!=null)            
+                MyState = MinerStates.MINING;            
+            else            
+                MyState = MinerStates.IDLE;
         }
     }
 
@@ -132,14 +142,12 @@ public class Miner : MonoBehaviour
         int _y = Random.Range(0, 10) * 10;
 
         PathFinding.Instance.GetGrid().GetXY(new Vector3(_x, _y, 5), out int x, out int y);
-        this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
-        hasObjective = true;
+        if (PathFinding.Instance.GetNode(x, y).GetIsWalkable())
+        {
+            this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
+            hasObjective = true;
+        }
     }
-
-
-
-
-
 
     private void StopMoving()
     {
