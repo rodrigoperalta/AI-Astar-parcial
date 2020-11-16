@@ -10,20 +10,14 @@ public class GoldMine : MonoBehaviour
         gold = 100;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (gold <= 0)        
             Destroy(this.gameObject);
-        //print("this mine has:" + gold);
-        
     }
 
     public void LoseGold(float g)
     {
         gold -= g*Time.deltaTime;
     }
-
-    
-
 }

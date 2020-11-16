@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 864084417444795304}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 5, y: 5, z: 0}
-  m_LocalScale: {x: 55, y: 55, z: 55}
+  m_LocalScale: {x: 10, y: 10, z: 55}
   m_Children: []
   m_Father: {fileID: 6025057410812832927}
   m_RootOrder: 0
@@ -74,8 +74,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.046677902, g: 0.9622642, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: b2194c8efaf0e2a489a028b10b923541, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -132,18 +132,18 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.015051246, y: -0.029975653}
   m_SpriteTilingProperty:
-    border: {x: 0.049999997, y: 0.049999997, z: 0.049999997, w: 0.049999997}
+    border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
+    oldSize: {x: 0.6, y: 0.6}
     newSize: {x: 0.16, y: 0.16}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.25, y: 0.25}
+  m_Size: {x: 2.7096303, y: 2.6956682}
   m_EdgeRadius: 0
 --- !u!1 &6495646397808079881
 GameObject:
@@ -183,6 +183,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6025057410812832927}
     m_Modifications:
+    - target: {fileID: 5958678528736233840, guid: 6b2c3f7c0d93bdf4b8488e956b988052, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5958678528736233840, guid: 6b2c3f7c0d93bdf4b8488e956b988052, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5958678528736233840, guid: 6b2c3f7c0d93bdf4b8488e956b988052, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5958678528736233841, guid: 6b2c3f7c0d93bdf4b8488e956b988052, type: 3}
       propertyPath: m_Name
       value: Explorer
@@ -230,6 +242,14 @@ PrefabInstance:
     - target: {fileID: 5958678528736233847, guid: 6b2c3f7c0d93bdf4b8488e956b988052, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5958678528736233847, guid: 6b2c3f7c0d93bdf4b8488e956b988052, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5958678528736233847, guid: 6b2c3f7c0d93bdf4b8488e956b988052, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}

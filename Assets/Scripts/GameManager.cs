@@ -19,38 +19,22 @@ public class GameManager : MonoBehaviour
         Instance = this;
         pathfinding = new PathFinding(20, 10);
         SetObstacles();
-        gold = 100;
+        gold = 150;
         population = 0;
-        
-       
+        SpawnMiner();
+        SpawnExplorer();
     }
+
     private void Update()
     {
-        SpawnSpot();        
+        SpawnSpot();
         if (Input.GetMouseButtonDown(0))
-        {
-            /*Vector3 mouseWorldPosition = UtilsClass.GetMouseWorldPosition();
-            pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
-            List<PathNode> path = pathfinding.FindPath(0, 0, x, y);
-
-            minerPathing.SetTargetPosition(mouseWorldPosition);*/
             if (gold >= 50 && population < 20)
                 SpawnMiner();
-            else if (gold < 50)            
-                print("Not enough gold");            
-            else           
-                print("Population limit reach");
-        }
 
-        if (Input.GetMouseButtonDown(1))
-        {           
+       /* if (Input.GetMouseButtonDown(1))                
             if (gold >= 50 && population < 20)
-                SpawnExplorer();
-            else if (gold < 50)           
-                print("Not enough gold");            
-            else            
-                print("Population limit reach");  
-        }
+                SpawnExplorer();*/
     }
 
     void SetObstacles()
@@ -112,12 +96,11 @@ public class GameManager : MonoBehaviour
             int _x = Random.Range(0, 20) * 10;
             int _y = Random.Range(0, 10) * 10;
             pathfinding.GetGrid().GetXY(new Vector3(_x, _y, 5), out int x, out int y);
-            if (pathfinding.GetNode(x,y).GetIsWalkable())
+            if (pathfinding.GetNode(x,y).GetIsWalkable() && new Vector2(x,y)!=new Vector2(9,5) )
             {
                 Instantiate(spot, pathfinding.GetGrid().GetWorldPosition(x, y), Quaternion.identity);
                 spotCount++;
             }
-           
         }
     }
 
@@ -129,12 +112,13 @@ public class GameManager : MonoBehaviour
     public void AddGold(float g)
     {
         gold += g;
-    }    
+    }
 
     public float GetGold()
     {
         return Mathf.RoundToInt(gold);
-    }    
+    }
+    
     public int GetPopulation()
     {
         return population;

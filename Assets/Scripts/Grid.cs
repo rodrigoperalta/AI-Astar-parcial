@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utils;
 
-
-//UtilsClass.CreateWorldText
 public class Grid<TGridObject> {
 
     public event EventHandler<OnGridObjectChangedEventArgs> OnGridObjectChanged;
@@ -34,7 +32,7 @@ public class Grid<TGridObject> {
             }
         }
 
-        bool showDebug = true;
+        bool showDebug = false;
         if (showDebug) {
             TextMesh[,] debugTextArray = new TextMesh[width, height];
 

@@ -31,6 +31,11 @@ public class Explorer : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        MyState = ExplorerStates.IDLE;
+    }
+
     void Update()
     {
         print(MyState);
@@ -123,7 +128,6 @@ public class Explorer : MonoBehaviour
             if (Vector3.Distance(transform.position, targetPosition) > 1f)
             {
                 Vector3 moveDir = (targetPosition - transform.position).normalized;
-
                 float distanceBefore = Vector3.Distance(transform.position, targetPosition);
                 transform.position = transform.position + moveDir * speed * Time.deltaTime;
             }
@@ -143,8 +147,6 @@ public class Explorer : MonoBehaviour
                     hasObjective = false;
                     MyState = ExplorerStates.IDLE;
                 }
-
-
             }
         }
     }
@@ -153,11 +155,7 @@ public class Explorer : MonoBehaviour
     {
         currentPathIndex = 0;
         pathVectorList = PathFinding.Instance.FindPath(GetPosition(), targetPosition);
-
-        if (pathVectorList != null && pathVectorList.Count > 1)
-        {
+        if (pathVectorList != null && pathVectorList.Count > 1)        
             pathVectorList.RemoveAt(0);
-        }
-
     }
 }
