@@ -183,6 +183,7 @@ public class Miner : MonoBehaviour
 
     public void Die()
     {
-        Destroy(this);
+        print("Me mori");
+        this.gameObject.SetActive(false);
     }
 }

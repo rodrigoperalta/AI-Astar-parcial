@@ -14,22 +14,25 @@ public class Wolf : MonoBehaviour
     [SerializeField] private float killRange;   
 
     [SerializeField] private Transform playerTransform;
-    [SerializeField] private Safe[] availableSafes;   
+    [SerializeField] private List<GameObject> availableSafes;   
 
     private Transform bestSafeSpot;    
     private NavMeshAgent agent;
 
     private Node topNode;
 
-    private float _currentStamina;
+    public float _currentStamina;
 
     public float currentStamina
     {
         get { return _currentStamina; }
-        set { _currentStamina = Mathf.Clamp(value, 0, startingStamina); }
+        set { _currentStamina = value; }
     }
 
-   
+    public void GetStamina()
+    {
+        _currentStamina += Time.deltaTime * staminaRegenRate;
+    }   
 
     private void Awake()
     {
@@ -49,19 +52,19 @@ public class Wolf : MonoBehaviour
         {
             print("Tree failure");
         }
-        currentStamina += Time.deltaTime * staminaRegenRate;
+        currentStamina -= Time.deltaTime * 1;
     }
 
     private void ConstructBehaviourTree()
     {
-        IsSafeAvailable safeAvailableNode = new IsSafeAvailable(availableSafes, playerTransform, this);
-        GoToSafeNode goToSafeNode = new GoToSafeNode(agent, this);
+        IsSafeAvailable safeAvailableNode = new IsSafeAvailable(availableSafes, this);
+        GoToSafeNode goToSafeNode = new GoToSafeNode(this, availableSafes);
         StaminaNode staminaNode = new StaminaNode(this, lowStaminaThreshold);
-        IsSafeNode isSafeNode = new IsSafeNode(playerTransform, transform);
-        ChaseNode chaseNode = new ChaseNode(playerTransform, this.transform, this);
+        IsSafeNode isSafeNode = new IsSafeNode(availableSafes, this.gameObject);
+        ChaseNode chaseNode = new ChaseNode(this.transform);
         RangeNode chasingRangeNode = new RangeNode(chasingRange, playerTransform, transform);
         RangeNode killRangeNode = new RangeNode(killRange, playerTransform, transform);
-        KillNode killNode = new KillNode(agent, this);
+        KillNode killNode = new KillNode(this);
 
         Sequence chaseSequence = new Sequence(new List<Node> { chasingRangeNode, chaseNode });
         Sequence killSequence = new Sequence(new List<Node> { killRangeNode, killNode });

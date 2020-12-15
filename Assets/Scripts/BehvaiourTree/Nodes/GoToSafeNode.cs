@@ -5,33 +5,38 @@ using UnityEngine.AI;
 
 
 public class GoToSafeNode : Node
-{
-    
-    private NavMeshAgent agent;
+{  
     private Wolf wolf;
+    private List<GameObject> safes;
 
-    public GoToSafeNode( NavMeshAgent agent, Wolf wolf)
-    {       
-        this.agent = agent;
+    public GoToSafeNode( Wolf wolf, List<GameObject> safes)
+    {   
         this.wolf = wolf;
+        this.safes = safes;
     }
 
     public override NodeState Evaluate()
     {
-        Transform safeSpot = wolf.GetBestSafeSpot();
-        if (safeSpot == null)
-            return NodeState.FAILURE;
-        float distance = Vector3.Distance(safeSpot.position, agent.transform.position);
-        if (distance>0.2f)
+        Transform safeSpot;
+        float distanceA = Vector3.Distance(safes[0].transform.position, wolf.transform.position);
+        float distanceB = Vector3.Distance(safes[1].transform.position, wolf.transform.position);
+        if (distanceA < distanceB)
         {
-            agent.isStopped = false;
-            agent.SetDestination(safeSpot.position);
-            return NodeState.RUNNING;
+            safeSpot = safes[0].transform;
         }
         else
         {
-            agent.isStopped = true;
-            return NodeState.SUCCESS;
+            safeSpot = safes[1].transform;
+        }        
+        if (safeSpot == null)
+            return NodeState.FAILURE;
+        float distance = Vector3.Distance(safeSpot.position, wolf.transform.position);
+        if (distance>0.2f)
+        {
+            wolf.transform.position = Vector3.MoveTowards(wolf.transform.position, safeSpot.position, 0.03f);
+            return NodeState.RUNNING;
         }
+        else           
+            return NodeState.SUCCESS;
     }
 }

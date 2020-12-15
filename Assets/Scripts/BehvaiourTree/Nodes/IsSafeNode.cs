@@ -3,32 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class IsSafeNode : Node
-{ 
+{
 
-    private Transform target;
-    private Transform origin;
-    private bool hitFire;
+    private List<GameObject> safes;
+    private GameObject wolf;
 
-    public IsSafeNode(Transform target, Transform origin)
+    public IsSafeNode(List<GameObject> safes, GameObject origin)
     {
-        this.target = target;
-        this.origin = origin;
+        this.safes = safes;
+        this.wolf = origin;
     }
 
     public override NodeState Evaluate()
     {
-        if (hitFire)        
-            return NodeState.SUCCESS;
-
-        return NodeState.FAILURE;
-        
-    }
-
-    private void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.gameObject.tag == "Fire")
+        float distanceA = Vector3.Distance(safes[0].transform.position, wolf.transform.position);
+        float distanceB = Vector3.Distance(safes[1].transform.position, wolf.transform.position);
+        if (distanceA < 0.2f || distanceB < 0.2f)
         {
-            hitFire = true;
+            wolf.GetComponent<Wolf>().GetStamina();
+            return NodeState.SUCCESS;
         }
+           
+        return NodeState.FAILURE;
     }
 }

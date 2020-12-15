@@ -17,6 +17,4 @@ public class StaminaNode : Node
     {
         return wolf.currentStamina <= threshold ? NodeState.SUCCESS : NodeState.FAILURE;
     }
-
-   
 }

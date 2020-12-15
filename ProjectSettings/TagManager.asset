@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Spot
   - Mine
+  - Miner
+  - Obstacle
   layers:
   - Default
   - TransparentFX
