@@ -180,4 +180,9 @@ public class Miner : MonoBehaviour
         if (pathVectorList != null && pathVectorList.Count > 1)        
             pathVectorList.RemoveAt(0);
     }
+
+    public void Die()
+    {
+        Destroy(this);
+    }
 }
