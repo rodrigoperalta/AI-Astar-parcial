@@ -3661,6 +3661,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2105966386179297762, guid: f70eeefc637d58544ab729bcbba2b4d6, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.015491903
+      objectReference: {fileID: 0}
+    - target: {fileID: 2105966386179297762, guid: f70eeefc637d58544ab729bcbba2b4d6, type: 3}
+      propertyPath: m_Size.y
+      value: 0.770874
+      objectReference: {fileID: 0}
+    - target: {fileID: 2105966386179297762, guid: f70eeefc637d58544ab729bcbba2b4d6, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.030083388
+      objectReference: {fileID: 0}
+    - target: {fileID: 2105966386179297762, guid: f70eeefc637d58544ab729bcbba2b4d6, type: 3}
+      propertyPath: m_Size.x
+      value: 0.8252037
+      objectReference: {fileID: 0}
     - target: {fileID: 5744399978205827213, guid: f70eeefc637d58544ab729bcbba2b4d6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3687,11 +3703,23 @@ PrefabInstance:
       objectReference: {fileID: 885263363}
     - target: {fileID: 5744399978205827215, guid: f70eeefc637d58544ab729bcbba2b4d6, type: 3}
       propertyPath: startingStamina
-      value: 30
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5744399978205827215, guid: f70eeefc637d58544ab729bcbba2b4d6, type: 3}
       propertyPath: staminaRegenRate
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744399978205827215, guid: f70eeefc637d58544ab729bcbba2b4d6, type: 3}
+      propertyPath: lowStaminaThreshold
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744399978205827215, guid: f70eeefc637d58544ab729bcbba2b4d6, type: 3}
+      propertyPath: killRange
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744399978205827215, guid: f70eeefc637d58544ab729bcbba2b4d6, type: 3}
+      propertyPath: chasingRange
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 5744399978644794322, guid: f70eeefc637d58544ab729bcbba2b4d6, type: 3}
       propertyPath: m_LocalPosition.x
