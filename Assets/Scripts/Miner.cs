@@ -186,5 +186,6 @@ public class Miner : MonoBehaviour
         print("Me mori");
         this.gameObject.SetActive(false);
         this.transform.parent.gameObject.SetActive(false);
+        Destroy(this.transform.parent.gameObject);
     }
 }

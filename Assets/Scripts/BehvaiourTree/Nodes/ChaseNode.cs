@@ -24,13 +24,13 @@ public class ChaseNode : Node
             if (miners.IndexOf(fooObj) < 0)            
                 miners.Add(fooObj);            
         }
+        Debug.Log("Chase count " + miners.Count);
         if (miners.Count>0)
         {
             if (target == null)
             {
                 randomMiner = Random.Range(0, miners.Count);
                 target = miners[randomMiner].transform;
-
             }
             float distance = Vector3.Distance(target.position, origin.position);
             if (distance > 0.2f)
@@ -40,15 +40,18 @@ public class ChaseNode : Node
             }
             else
             {
-                target = null;
+                Debug.Log("Saco al " + randomMiner);
                 miners.RemoveAt(randomMiner);
+                target = null;                
                 return NodeState.SUCCESS;
             }
         }
         else
         {
-            return NodeState.FAILURE;
+            Debug.Log("warning");
+            return NodeState.RUNNING;
         }
        
+
     }
 }

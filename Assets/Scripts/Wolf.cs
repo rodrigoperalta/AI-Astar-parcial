@@ -14,10 +14,29 @@ public class Wolf : MonoBehaviour
     [SerializeField] private float killRange;   
 
     [SerializeField] private Transform playerTransform;
-    [SerializeField] private List<GameObject> availableSafes;   
+    [SerializeField] private List<GameObject> availableSafes;
+
+    ChaseNode chaseNode;
+    KillNode killNode;
+    IsSafeAvailable safeAvailableNode;
+    GoToSafeNode goToSafeNode;
+    StaminaNode staminaNode;
+    IsSafeNode isSafeNode;
+    RangeNode chasingRangeNode;
+    RangeNode killRangeNode;
+
+    Sequence chaseSequence ;
+    Sequence killSequence;
+
+    Sequence goToSafeSequence;
+    Selector findSafeSelector;
+    Selector tryToGoSafeSelector;
+    Sequence mainSafeSequence;
+
+    Transform target;
 
     private Transform bestSafeSpot;    
-    private NavMeshAgent agent;
+    
 
     private Node topNode;
 
@@ -32,13 +51,8 @@ public class Wolf : MonoBehaviour
     public void GetStamina()
     {
         _currentStamina += Time.deltaTime * staminaRegenRate;
-    }   
-
-    private void Awake()
-    {
-        agent = GetComponent<NavMeshAgent>();
-    }
-
+    } 
+    
     private void Start()
     {
         _currentStamina = startingStamina;
@@ -49,7 +63,21 @@ public class Wolf : MonoBehaviour
     {
         topNode.Evaluate();
         if (topNode.nodeState == NodeState.FAILURE)
-        {            
+        {
+            print("chaseNode node state: " + chaseNode.nodeState);
+            print("killNode node state: " + killNode.nodeState);
+            print("safeAvailableNode node state: " + safeAvailableNode.nodeState);
+            print("goToSafeNode node state: " + goToSafeNode.nodeState);
+            print("staminaNode node state: " + staminaNode.nodeState);
+            print("isSafeNode node state: " + isSafeNode.nodeState);
+            print("ckillRangeNode node state: " + killRangeNode.nodeState);
+            print("chasingRangeNode node state: " + chasingRangeNode.nodeState);
+            print("chaseSequence state: " + chaseSequence.nodeState);
+            print("killSequence state: " + killSequence.nodeState);
+            print("goToSafeSequence state: " + goToSafeSequence.nodeState);
+            print("findSafeSelector state: " + findSafeSelector.nodeState);
+            print("tryToGoSafeSelector state: " + tryToGoSafeSelector.nodeState);
+            print("mainSafeSequence state: " + mainSafeSequence.nodeState);
             print("Tree failure");            
         }
         //currentStamina -= Time.deltaTime * 1;
@@ -57,22 +85,22 @@ public class Wolf : MonoBehaviour
 
     private void ConstructBehaviourTree()
     {
-        IsSafeAvailable safeAvailableNode = new IsSafeAvailable(availableSafes, this);
-        GoToSafeNode goToSafeNode = new GoToSafeNode(this, availableSafes);
-        StaminaNode staminaNode = new StaminaNode(this, lowStaminaThreshold);
-        IsSafeNode isSafeNode = new IsSafeNode(availableSafes, this.gameObject);
-        ChaseNode chaseNode = new ChaseNode(this.transform);
-        RangeNode chasingRangeNode = new RangeNode(chasingRange, playerTransform, transform);
-        RangeNode killRangeNode = new RangeNode(killRange, playerTransform, transform);
-        KillNode killNode = new KillNode(this);
+        safeAvailableNode = new IsSafeAvailable(availableSafes, this);
+        goToSafeNode = new GoToSafeNode(this, availableSafes);
+        staminaNode = new StaminaNode(this, lowStaminaThreshold);
+        isSafeNode = new IsSafeNode(availableSafes, this.gameObject);
+        chaseNode = new ChaseNode(this.transform);
+        chasingRangeNode = new RangeNode(chasingRange, playerTransform, transform);
+        killRangeNode = new RangeNode(killRange, playerTransform, transform);
+        killNode = new KillNode(this);
 
-        Sequence chaseSequence = new Sequence(new List<Node> { chasingRangeNode, chaseNode });
-        Sequence killSequence = new Sequence(new List<Node> { killRangeNode, killNode });
+        chaseSequence = new Sequence(new List<Node> { chasingRangeNode, chaseNode });
+        killSequence = new Sequence(new List<Node> { killRangeNode, killNode });
 
-        Sequence goToSafeSequence = new Sequence(new List<Node> { safeAvailableNode, goToSafeNode });
-        Selector findSafeSelector = new Selector(new List<Node> { goToSafeSequence, chaseSequence });
-        Selector tryToGoSafeSelector = new Selector(new List<Node> { isSafeNode, findSafeSelector });
-        Sequence mainSafeSequence = new Sequence(new List<Node> { staminaNode, tryToGoSafeSelector });
+        goToSafeSequence = new Sequence(new List<Node> { safeAvailableNode, goToSafeNode });
+        findSafeSelector = new Selector(new List<Node> { goToSafeSequence, chaseSequence });
+        tryToGoSafeSelector = new Selector(new List<Node> { isSafeNode, findSafeSelector });
+        mainSafeSequence = new Sequence(new List<Node> { staminaNode, tryToGoSafeSelector });
 
         topNode = new Selector(new List<Node> { mainSafeSequence, killSequence, chaseSequence });
     }
@@ -93,4 +121,15 @@ public class Wolf : MonoBehaviour
     {
         currentStamina -= 40;
     }
+
+    public void SetTarget(Transform _target)
+    {
+        target = _target;
+    }
+
+    public Transform GetTarget()
+    {
+        return target;
+    }
+
 }

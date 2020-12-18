@@ -23,12 +23,13 @@ public class KillNode : Node
             if (miners.IndexOf(fooObj) < 0)
                 miners.Add(fooObj);
         }
+        Debug.Log("Kill count " + miners.Count);
         if (miners.Count>0)
         {
             for (int i = 0; i < miners.Count; i++)
             {
                 float distance = Vector3.Distance(miners[i].transform.position, wolf.transform.position);
-                if (distance < 5.0f)
+                if (distance < 0.2f)
                 {
                     Debug.Log("Mate");
                     miners[i].GetComponent<Miner>().Die();
