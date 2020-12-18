@@ -101,8 +101,8 @@ public class Wolf : MonoBehaviour
 
         chaseSequence = new Sequence(new List<Node> { chasingRangeNode, chaseNode });
         killSequence = new Sequence(new List<Node> { killRangeNode, killNode });
-
         goToSafeSequence = new Sequence(new List<Node> { safeAvailableNode, goToSafeNode });
+
         findSafeSelector = new Selector(new List<Node> { goToSafeSequence, chaseSequence });
         tryToGoSafeSelector = new Selector(new List<Node> { isSafeNode, findSafeSelector });
         mainSafeSequence = new Sequence(new List<Node> { staminaNode, tryToGoSafeSelector });
