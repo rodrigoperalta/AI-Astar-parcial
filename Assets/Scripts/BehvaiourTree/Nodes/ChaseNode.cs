@@ -18,6 +18,7 @@ public class ChaseNode : Node
 
     public override NodeState Evaluate()
     {
+        
         foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("Miner"))
         {
            // miners.Add(fooObj);
@@ -25,25 +26,29 @@ public class ChaseNode : Node
                 miners.Add(fooObj);            
         }
         Debug.Log("Chase count " + miners.Count);
-        if (miners.Count>0)
+        if (miners.Count > 0)
         {
-            if (target == null)
+            
+            if (origin.GetComponent<Wolf>().GetTarget() == null)
             {
                 randomMiner = Random.Range(0, miners.Count);
-                target = miners[randomMiner].transform;
-            }
-            float distance = Vector3.Distance(target.position, origin.position);
-            if (distance > 0.2f)
-            {
-                origin.position = Vector3.MoveTowards(origin.position, target.position, 0.03f);
-                return NodeState.RUNNING;
+                origin.GetComponent<Wolf>().SetTarget(miners[randomMiner].transform);
+                return NodeState.SUCCESS;
             }
             else
             {
-                Debug.Log("Saco al " + randomMiner);
-                miners.RemoveAt(randomMiner);
-                target = null;                
-                return NodeState.SUCCESS;
+                float distance = Vector3.Distance(origin.GetComponent<Wolf>().GetTarget().position, origin.position);
+                if (distance > 0.1f)
+                {
+                    origin.position = Vector3.MoveTowards(origin.position, origin.GetComponent<Wolf>().GetTarget().position, 0.03f);
+                    return NodeState.RUNNING;
+                }
+                else
+                {
+                    Debug.Log("Saco al " + randomMiner);
+                    miners.RemoveAt(randomMiner);
+                    return NodeState.SUCCESS;
+                }
             }
         }
         else

@@ -11,35 +11,26 @@ public class KillNode : Node
     private Wolf wolf;
     private bool kill;
 
-    public KillNode( Wolf wolf)
-    {        
+    public KillNode(Wolf wolf)
+    {
         this.wolf = wolf;
     }
 
     public override NodeState Evaluate()
-    {
-        foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("Miner"))
+    {  
+        if (wolf.GetTarget()!=null)
         {
-            if (miners.IndexOf(fooObj) < 0)
-                miners.Add(fooObj);
-        }
-        Debug.Log("Kill count " + miners.Count);
-        if (miners.Count>0)
-        {
-            for (int i = 0; i < miners.Count; i++)
+            float distance = Vector3.Distance(wolf.GetTarget().position, wolf.transform.position);
+            if (distance < 0.2f)
             {
-                float distance = Vector3.Distance(miners[i].transform.position, wolf.transform.position);
-                if (distance < 0.2f)
-                {
-                    Debug.Log("Mate");
-                    miners[i].GetComponent<Miner>().Die();
-                    wolf.LoseStamina();
-                    miners.RemoveAt(i);                   
-                    return NodeState.SUCCESS;
-                }
+                Debug.Log("Mate");
+                wolf.GetTarget().GetComponent<Miner>().Die();
+                wolf.LoseStamina();
+                wolf.SetTarget(null);
+
+                return NodeState.SUCCESS;
             }
         }
-        
         return NodeState.FAILURE;
-    }   
+    }
 }
