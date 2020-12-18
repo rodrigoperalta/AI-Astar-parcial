@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
         pathfinding = new PathFinding(20, 10);
         SetObstacles();
-        gold = 150;
+        gold = 1500;
         population = 0;
         SpawnMiner();
         SpawnExplorer();

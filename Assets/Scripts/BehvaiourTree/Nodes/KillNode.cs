@@ -18,19 +18,27 @@ public class KillNode : Node
 
     public override NodeState Evaluate()
     {
-        foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("Miner"))        
-            miners.Add(fooObj);
-        
-        for (int i = 0; i < miners.Count; i++)
+        foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("Miner"))
         {
-            float distance = Vector3.Distance(miners[i].transform.position, wolf.transform.position);
-            if (distance < 1.0f)
+            if (miners.IndexOf(fooObj) < 0)
+                miners.Add(fooObj);
+        }
+        if (miners.Count>0)
+        {
+            for (int i = 0; i < miners.Count; i++)
             {
-                Debug.Log("Mate");
-                miners[i].GetComponent<Miner>().Die();
-                return NodeState.SUCCESS;
+                float distance = Vector3.Distance(miners[i].transform.position, wolf.transform.position);
+                if (distance < 5.0f)
+                {
+                    Debug.Log("Mate");
+                    miners[i].GetComponent<Miner>().Die();
+                    wolf.LoseStamina();
+                    miners.RemoveAt(i);                   
+                    return NodeState.SUCCESS;
+                }
             }
         }
+        
         return NodeState.FAILURE;
     }   
 }

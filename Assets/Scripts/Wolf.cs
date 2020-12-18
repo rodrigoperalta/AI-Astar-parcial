@@ -49,10 +49,10 @@ public class Wolf : MonoBehaviour
     {
         topNode.Evaluate();
         if (topNode.nodeState == NodeState.FAILURE)
-        {
-            print("Tree failure");
+        {            
+            print("Tree failure");            
         }
-        currentStamina -= Time.deltaTime * 1;
+        //currentStamina -= Time.deltaTime * 1;
     }
 
     private void ConstructBehaviourTree()
@@ -88,4 +88,9 @@ public class Wolf : MonoBehaviour
     {
         return bestSafeSpot;
     }  
+
+    public void LoseStamina()
+    {
+        currentStamina -= 40;
+    }
 }

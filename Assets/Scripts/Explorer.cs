@@ -38,7 +38,7 @@ public class Explorer : MonoBehaviour
 
     void Update()
     {
-        print(MyState);
+        //print(MyState);
         timer += 1 * Time.deltaTime;
         switch (MyState)
         {
@@ -99,7 +99,7 @@ public class Explorer : MonoBehaviour
             PathFinding.Instance.GetGrid().GetXY(new Vector3(target.transform.position.x, target.transform.position.y, 5), out int x, out int y);
             this.SetTargetPosition(PathFinding.Instance.GetGrid().GetWorldPosition(x, y));
             HandleMovement();
-            print("target is null");
+           // print("target is null");
         }
         else
         {
