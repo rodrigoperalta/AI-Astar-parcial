@@ -40,6 +40,6 @@ public class ChaseNode : Node
             }
         }
         else
-            return NodeState.RUNNING;
+            return NodeState.FAILURE;
     }
 }
