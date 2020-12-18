@@ -6,7 +6,6 @@ using UnityEngine.AI;
 
 public class ChaseNode : Node
 {
-    private Transform target;
     private Transform origin;
     private int randomMiner;
     private List<GameObject> miners = new List<GameObject>();
@@ -18,17 +17,10 @@ public class ChaseNode : Node
 
     public override NodeState Evaluate()
     {
+        miners = origin.GetComponent<Wolf>().GetMiners();
         
-        foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("Miner"))
-        {
-           // miners.Add(fooObj);
-            if (miners.IndexOf(fooObj) < 0)            
-                miners.Add(fooObj);            
-        }
-        Debug.Log("Chase count " + miners.Count);
         if (miners.Count > 0)
         {
-            
             if (origin.GetComponent<Wolf>().GetTarget() == null)
             {
                 randomMiner = Random.Range(0, miners.Count);
@@ -43,20 +35,11 @@ public class ChaseNode : Node
                     origin.position = Vector3.MoveTowards(origin.position, origin.GetComponent<Wolf>().GetTarget().position, 0.03f);
                     return NodeState.RUNNING;
                 }
-                else
-                {
-                    Debug.Log("Saco al " + randomMiner);
-                    miners.RemoveAt(randomMiner);
+                else                                   
                     return NodeState.SUCCESS;
-                }
             }
         }
         else
-        {
-            Debug.Log("warning");
             return NodeState.RUNNING;
-        }
-       
-
     }
 }

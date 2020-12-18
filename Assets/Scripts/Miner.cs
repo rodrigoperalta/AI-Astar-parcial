@@ -182,10 +182,7 @@ public class Miner : MonoBehaviour
     }
 
     public void Die()
-    {
-        print("Me mori");
-        this.gameObject.SetActive(false);
-        this.transform.parent.gameObject.SetActive(false);
+    {      
         Destroy(this.transform.parent.gameObject);
     }
 }

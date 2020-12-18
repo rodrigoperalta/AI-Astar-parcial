@@ -5,11 +5,7 @@ using UnityEngine.AI;
 
 public class KillNode : Node
 {
-    private NavMeshAgent agent;
-    private List<GameObject> miners = new List<GameObject>();
-    //private GameObject[] miners;
-    private Wolf wolf;
-    private bool kill;
+    private Wolf wolf;   
 
     public KillNode(Wolf wolf)
     {
@@ -21,11 +17,11 @@ public class KillNode : Node
         if (wolf.GetTarget()!=null)
         {
             float distance = Vector3.Distance(wolf.GetTarget().position, wolf.transform.position);
-            if (distance < 0.2f)
-            {
-                Debug.Log("Mate");
-                wolf.GetTarget().GetComponent<Miner>().Die();
+            if (distance < 2.5f)
+            {                
+                wolf.RemoveFromMiner(wolf.GetTarget().gameObject);
                 wolf.LoseStamina();
+                wolf.GetTarget().GetComponent<Miner>().Die();
                 wolf.SetTarget(null);
 
                 return NodeState.SUCCESS;

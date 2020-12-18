@@ -11,36 +11,34 @@ public class Wolf : MonoBehaviour
     [SerializeField] private float staminaRegenRate;
 
     [SerializeField] private float chasingRange;
-    [SerializeField] private float killRange;   
+    [SerializeField] private float killRange;
 
     [SerializeField] private Transform playerTransform;
     [SerializeField] private List<GameObject> availableSafes;
 
-    ChaseNode chaseNode;
-    KillNode killNode;
-    IsSafeAvailable safeAvailableNode;
-    GoToSafeNode goToSafeNode;
-    StaminaNode staminaNode;
-    IsSafeNode isSafeNode;
-    RangeNode chasingRangeNode;
-    RangeNode killRangeNode;
-
-    Sequence chaseSequence ;
-    Sequence killSequence;
-
-    Sequence goToSafeSequence;
-    Selector findSafeSelector;
-    Selector tryToGoSafeSelector;
-    Sequence mainSafeSequence;
-
-    Transform target;
-
-    private Transform bestSafeSpot;    
-    
+    public List<GameObject> miners;
+    private Transform target;
+    private Transform bestSafeSpot;
+    public float _currentStamina;
 
     private Node topNode;
 
-    public float _currentStamina;
+    private ChaseNode chaseNode;
+    private KillNode killNode;
+    private IsSafeAvailable safeAvailableNode;
+    private GoToSafeNode goToSafeNode;
+    private StaminaNode staminaNode;
+    private IsSafeNode isSafeNode;
+    private RangeNode chasingRangeNode;
+    private RangeNode killRangeNode;
+
+    private Sequence chaseSequence;
+    private Sequence killSequence;
+
+    private Sequence goToSafeSequence;
+    private Selector findSafeSelector;
+    private Selector tryToGoSafeSelector;
+    private Sequence mainSafeSequence;
 
     public float currentStamina
     {
@@ -51,20 +49,28 @@ public class Wolf : MonoBehaviour
     public void GetStamina()
     {
         _currentStamina += Time.deltaTime * staminaRegenRate;
-    } 
-    
+    }
+
     private void Start()
     {
         _currentStamina = startingStamina;
         ConstructBehaviourTree();
+        miners = new List<GameObject>();
+        foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("Miner"))
+            miners.Add(fooObj);
     }
 
     private void Update()
     {
+        foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("Miner"))
+        {
+            if (miners.IndexOf(fooObj) < 0)
+                miners.Add(fooObj);
+        }
         topNode.Evaluate();
         if (topNode.nodeState == NodeState.FAILURE)
         {
-            print("chaseNode node state: " + chaseNode.nodeState);
+            /*print("chaseNode node state: " + chaseNode.nodeState);
             print("killNode node state: " + killNode.nodeState);
             print("safeAvailableNode node state: " + safeAvailableNode.nodeState);
             print("goToSafeNode node state: " + goToSafeNode.nodeState);
@@ -77,10 +83,9 @@ public class Wolf : MonoBehaviour
             print("goToSafeSequence state: " + goToSafeSequence.nodeState);
             print("findSafeSelector state: " + findSafeSelector.nodeState);
             print("tryToGoSafeSelector state: " + tryToGoSafeSelector.nodeState);
-            print("mainSafeSequence state: " + mainSafeSequence.nodeState);
-            print("Tree failure");            
+            print("mainSafeSequence state: " + mainSafeSequence.nodeState);*/
+            print("Tree failure");
         }
-        //currentStamina -= Time.deltaTime * 1;
     }
 
     private void ConstructBehaviourTree()
@@ -105,8 +110,6 @@ public class Wolf : MonoBehaviour
         topNode = new Selector(new List<Node> { mainSafeSequence, killSequence, chaseSequence });
     }
 
-   
-
     public void SetBestSafeSpot(Transform bestSpot)
     {
         this.bestSafeSpot = bestSpot;
@@ -115,11 +118,11 @@ public class Wolf : MonoBehaviour
     public Transform GetBestSafeSpot()
     {
         return bestSafeSpot;
-    }  
+    }
 
     public void LoseStamina()
     {
-        currentStamina -= 40;
+        currentStamina -= 60;
     }
 
     public void SetTarget(Transform _target)
@@ -130,6 +133,16 @@ public class Wolf : MonoBehaviour
     public Transform GetTarget()
     {
         return target;
+    }
+
+    public List<GameObject> GetMiners()
+    {
+        return miners;
+    }
+
+    public void RemoveFromMiner(GameObject miner)
+    {
+        miners.Remove(miner);
     }
 
 }
